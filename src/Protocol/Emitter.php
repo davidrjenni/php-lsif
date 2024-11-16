@@ -18,9 +18,9 @@ final class Emitter
 
     private FileWriter $writer;
 
-    public function __construct(string $filename = 'dump.lsif')
+    public function __construct(string $filename = 'dump.lsif', int $id = 0)
     {
-        $this->id = 0;
+        $this->id = $id;
         $this->writer = new FileWriter($filename);
     }
 

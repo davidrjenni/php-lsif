@@ -10,7 +10,7 @@ use LsifPhp\Indexer\Indexer;
 use LsifPhp\Protocol\Emitter;
 use LsifPhp\Protocol\ToolInfo;
 
-$options = \getopt('h', ['help', 'memory-limit:']);
+$options = \getopt('h', ['help', 'memory-limit:', 'id:', 'filename:']);
 if ($options === false) {
     echo "Cannot parse options.\n";
     exit(1);
@@ -22,6 +22,8 @@ if (isset($options['h']) || isset($options['help'])) {
     echo "Options:\n";
     echo "  -h --help               display this help and exit\n";
     echo "     --memory-limit=\"1G\"  memory limit\n";
+    echo "     --id=1  the starting element ID to start from\n";
+    echo "     --filename=dump.lsif  the name of the file output\n";
     exit(0);
 }
 
@@ -36,11 +38,26 @@ if (\ini_set('memory_limit', $memoryLimit) === false) {
     exit(1);
 }
 
+$id = intval($options['id'] ?? '1') - 1;
+if ($id < 0) {
+    echo "Invalid start element ID.\n";
+    exit(1);
+}
+
+$filename = $options['filename'] ?? 'dump.lsif';
+if (!\is_string($filename) || \substr($filename, -5) !== '.lsif') {
+    echo "Invalid filename. Must be a file ending with .lsif\n";
+    exit(1);
+}
+
 $projectRoot = \getcwd();
 $toolInfo = new ToolInfo('lsif-php', '0.0.6', \array_splice($argv, 1));
 
 $git = new Git();
-$emitter = new Emitter();
+$emitter = new Emitter(
+    filename: $filename,
+    id: $id,
+);
 $indexer = new Indexer($projectRoot, $emitter, $toolInfo, $git->version());
 $indexer->index();
 $emitter->write();
