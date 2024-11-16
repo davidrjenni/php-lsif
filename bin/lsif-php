@@ -22,6 +22,8 @@ if (isset($options['h']) || isset($options['help'])) {
     echo "Options:\n";
     echo "  -h --help               display this help and exit\n";
     echo "     --memory-limit=\"1G\"  memory limit\n";
+    echo "     --id=1  the starting element ID to start from\n";
+    echo "     --filename=dump.lsif  the name of the file output\n";
     exit(0);
 }
 
