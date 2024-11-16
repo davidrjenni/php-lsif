@@ -36,9 +36,9 @@ if (\ini_set('memory_limit', $memoryLimit) === false) {
     exit(1);
 }
 
-$id = intval($options['id'] ?? '0');
+$id = intval($options['id'] ?? '1') - 1;
 if ($id < 0) {
-    echo "Invalid id.\n";
+    echo "Invalid start element ID.\n";
     exit(1);
 }
 
